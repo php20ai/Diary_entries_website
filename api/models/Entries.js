@@ -27,7 +27,20 @@ class Entries {
     }
 
     static async obtainOneById(id){
-        const result = await db.query('SELECT * FROM diary_entries WHERE id=$1;', [id])
+        console.log("In line 30 Model")
+        const result = await db.query('SELECT * FROM diary_entries WHERE entry_id=$1;', [id])
+        console.log("In line 332 Model")
+        if (result.rows.length!==1){
+            throw new Error(`There are either no rows with id=${id} or multiple rows with id=${id}.`)
+        } else{
+          return new Entries(result.rows[0])
+        }
+    }
+
+    static async create({entry_id, title, description, author}){
+        console.log("In line 30 Model")
+        const result = await db.query('INSERT INTO diary_entries (entry_id, title, description, author) VALUES ($1, $2, $3, $4)', [entry_id, title, description, author])
+        console.log("In line 332 Model")
         if (result.rows.length!==1){
             throw new Error(`There are either no rows with id=${id} or multiple rows with id=${id}.`)
         } else{
